@@ -1,0 +1,120 @@
+﻿<Window x:Class="UserInterfaces.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UserInterfaces"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <!-- Set the styles for the tool bar. -->
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}" x:Key="FormatTextStyle">
+                <Setter Property="FontFamily" Value="Palatino Linotype" />
+                <Setter Property="Width" Value="30" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="CommandTarget" Value="{Binding ElementName=MainRtb}" />
+            </Style>
+
+            <Style TargetType="{x:Type Button}" x:Key="FormatImageStyle">
+                <Setter Property="Width" Value="30" />
+                <Setter Property="CommandTarget" Value="{Binding ElementName=MainRtb}" />
+            </Style>
+        </Grid.Resources>
+
+        <DockPanel DockPanel.Dock="Top">
+            <Menu Height="25" VerticalAlignment="Top">
+                <MenuItem Header="File">
+                    <MenuItem Header="Open" Command="{Binding OpenFile}"/>
+                    <MenuItem Header="Save" >
+                        <MenuItem Header="Save as" Command="{Binding SaveAsFile}"/>
+                        <MenuItem Header="Save" Command="{Binding SaveFile}"/>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit" ></MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <ToolBar  DockPanel.Dock="Top">
+
+                <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Cut" ToolTip="Cut">
+                    <Image Source="..\Icons\Cut.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Copy" ToolTip="Copy">
+                    <Image Source="..\Icons\Copy.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Paste" ToolTip="Paste">
+                    <Image Source="..\Icons\Paste.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Undo" ToolTip="Undo">
+                    <Image Source="..\Icons\Undo.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Redo" ToolTip="Redo">
+                    <Image Source="..\Icons\Redo.png" RenderSize="24 24"/>
+                </Button>
+
+                <Button Style="{StaticResource FormatTextStyle}" Command="EditingCommands.ToggleBold" ToolTip="Bold">
+                    <TextBlock FontWeight="Bold">B</TextBlock>
+                </Button>
+                <Button Style="{StaticResource FormatTextStyle}" Command="EditingCommands.ToggleItalic"
+                        ToolTip="Italic">
+                    <TextBlock FontStyle="Italic" FontWeight="Bold">I</TextBlock>
+                </Button>
+                <Button Style="{StaticResource FormatTextStyle}" Command="EditingCommands.ToggleUnderline"
+                        ToolTip="Underline">
+                    <TextBlock TextDecorations="Underline" FontWeight="Bold">U</TextBlock>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.IncreaseFontSize"
+                        ToolTip="Grow Font">
+                    <TextBlock FontSize="18">A</TextBlock>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.DecreaseFontSize"
+                        ToolTip="Shrink Font">
+                    <TextBlock FontSize="12">A</TextBlock>
+                </Button>
+
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.ToggleBullets"
+                        ToolTip="Bullets">
+                    <Image Source="..\Icons\Bullets.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.ToggleNumbering"
+                        ToolTip="Numbering">
+                    <Image Source="..\Icons\NumbersList.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.AlignLeft"
+                        ToolTip="Align Left">
+                    <Image Source="..\Icons\AllignLeft.png" RenderSize="24 24" />
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.AlignCenter"
+                        ToolTip="Align Center">
+                    <Image Source="..\Icons\AllignCenter.png" RenderSize="24 24"/>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.AlignRight"
+                        ToolTip="Align Right">
+                    <Image Source="..\Icons\AllignLeft.png" RenderSize="24 24">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="-1"/>
+                        </Image.RenderTransform>
+                    </Image>
+                </Button>
+                <Button Style="{StaticResource FormatImageStyle}" Command="EditingCommands.AlignJustify"
+                        ToolTip="Align Justify">
+                    <Image Source="..\Icons\AllginFill.png" RenderSize="24 24"/>
+                </Button>
+            </ToolBar>
+
+            <xctk:RichTextBox Name="MainRtb" DockPanel.Dock="Left"
+                         Text="{Binding MainDocumentXaml, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <xctk:RichTextBox.TextFormatter>
+                    <xctk:XamlFormatter />
+                </xctk:RichTextBox.TextFormatter>
+            </xctk:RichTextBox>
+            <TextBlock DockPanel.Dock="Bottom" Text="{Binding Elapsed, StringFormat={}{0:hh':'mm':'ss}}" />
+        </DockPanel>
+    </Grid>
+
+</Window>
