@@ -93,6 +93,7 @@
       <PackageReference Include="DynamicData" Version="7.1.16" />
       <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
       <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+      <PackageReference Include="MvvmLight" Version="5.4.1.1" />
       <PackageReference Include="Prism.Core" Version="8.1.97" />
       <PackageReference Include="Prism.Unity" Version="8.1.97" />
       <PackageReference Include="Prism.Wpf" Version="8.1.97" />

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Prism.Commands;
 using ReactiveUI;
@@ -11,6 +13,7 @@ namespace UserInterfaces.ViewModels
 {
     public class MainWindowViewModel:ViewModelBase
     {
+        public readonly char[] Separators = new[] {' ', '.', ',', '!', '?', ':', ';', '\n'};
         public string MainDocumentXaml
         {
             get => _mainDocumentXaml;
@@ -18,17 +21,30 @@ namespace UserInterfaces.ViewModels
         }
 
         private string _elapsed;
+
         public string Elapsed
         {
             get => _elapsed;
             set => this.RaiseAndSetIfChanged(ref _elapsed, value);
         }
 
+        private string _estimated;
+
+        public string Estimated
+        {
+            get => _estimated;
+            set => this.RaiseAndSetIfChanged(ref _estimated, value);
+        }
+
         public Stopwatch Stopwatch { get; set; }
+
+        public TimeSpan EstimatedTimeSpan { get; set; }
 
         public DelegateCommand OpenFile { get; set; }
         public DelegateCommand SaveFile { get; set; }
         public DelegateCommand SaveAsFile { get; set; }
+
+        public DelegateCommand KeyDown { get; set; }
 
         private readonly DispatcherTimer _dispatcherTimer;
         private string _mainDocumentXaml;
@@ -47,6 +63,9 @@ namespace UserInterfaces.ViewModels
             OpenFile = new DelegateCommand(OpenFileDialog);
             SaveFile = new DelegateCommand(SaveCurrentFile);
             SaveAsFile = new DelegateCommand(SaveFileDialog);
+            KeyDown = new DelegateCommand(OnKeyDown);
+
+            EstimatedTimeSpan = TimeSpan.Zero;
 
         }
 
@@ -100,6 +119,25 @@ namespace UserInterfaces.ViewModels
         private void DispatcherTimerTick(object sender, EventArgs e)
         {
             Elapsed = Stopwatch.Elapsed.ToString();
+        }
+
+        public void OnKeyDown()
+        {
+            var trim = MainDocumentXaml.TrimEnd();
+            if (trim.Length != 0)
+            {
+                if (Separators.Contains(trim.Last()))
+                    EstimatedTimeSpan = EstimatedTimeSpan.Add(new TimeSpan(0, 0, 0, 1, 350));
+            }
+
+            EstimatedTimeSpan = EstimatedTimeSpan.Add(new TimeSpan(0, 0, 0, 0, 200));
+            Estimated = EstimatedTimeSpan.ToString();
+        }
+
+        public void CommandExecuted(object sender, ExecutedRoutedEventArgs args)
+        {
+            EstimatedTimeSpan = EstimatedTimeSpan.Add(new TimeSpan(0, 0, 0,1,750));
+            Estimated = EstimatedTimeSpan.ToString();
         }
 
     }

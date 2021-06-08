@@ -6,9 +6,11 @@
         xmlns:local="clr-namespace:UserInterfaces"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:cmd="http://www.galasoft.ch/mvvmlight"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="WORD" Height="650" Width="600">
     <Grid>
         <!-- Set the styles for the tool bar. -->
         <Grid.Resources>
@@ -25,7 +27,13 @@
             </Style>
         </Grid.Resources>
 
-        <DockPanel DockPanel.Dock="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
             <Menu Height="25" VerticalAlignment="Top">
                 <MenuItem Header="File">
                     <MenuItem Header="Open" Command="{Binding OpenFile}"/>
@@ -38,7 +46,7 @@
                 </MenuItem>
             </Menu>
 
-            <ToolBar  DockPanel.Dock="Top">
+            <ToolBar Grid.Row="1">
 
                 <Button Style="{StaticResource FormatImageStyle}" Command="ApplicationCommands.Cut" ToolTip="Cut">
                     <Image Source="..\Icons\Cut.png" RenderSize="24 24"/>
@@ -96,7 +104,10 @@
                         ToolTip="Align Right">
                     <Image Source="..\Icons\AllignLeft.png" RenderSize="24 24">
                         <Image.RenderTransform>
-                            <ScaleTransform ScaleX="-1"/>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="-1"/>
+                                <TranslateTransform X="24"/>
+                            </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
                 </Button>
@@ -106,15 +117,23 @@
                 </Button>
             </ToolBar>
 
-            <xctk:RichTextBox Name="MainRtb" DockPanel.Dock="Left"
+            <xctk:RichTextBox Grid.Row="2" Name="MainRtb"
                          Text="{Binding MainDocumentXaml, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <cmd:EventToCommand Command="{Binding KeyDown}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <xctk:RichTextBox.TextFormatter>
-                    <xctk:XamlFormatter />
+                    <xctk:PlainTextFormatter/>
                 </xctk:RichTextBox.TextFormatter>
             </xctk:RichTextBox>
-            <TextBlock DockPanel.Dock="Bottom" Text="{Binding Elapsed, StringFormat={}{0:hh':'mm':'ss}}" />
-        </DockPanel>
+        <StackPanel Grid.Row="3"  Orientation="Horizontal">
+            <TextBlock Margin="10" Text="{Binding Elapsed, StringFormat={}{0:hh':'mm':'ss}}" />
+            <TextBlock Margin="10"  Text="{Binding Estimated, StringFormat={}{0:hh':'mm':'ss}}" />
+        </StackPanel>
+
     </Grid>
 
 </Window>
